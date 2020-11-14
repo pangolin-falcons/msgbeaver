@@ -21,3 +21,7 @@ class Store:
                  'message': 'give me the meats', 
                  'address': '4203 Falcon Rd\n Pangolin, OH'}]
 
+    def removePendingRequest(self, index):
+        # Removes request data at index
+        print("Purging registered request data")
+        return
