@@ -48,5 +48,5 @@ class Conversations:
         else:
             return ["Success", response['MessageResponse']['Result'][destinationNumber]['MessageId']]
 
-    def receive(self, message):
+    def receive(self, phoneNum, message):
         return
