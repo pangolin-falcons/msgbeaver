@@ -33,8 +33,14 @@ class Store:
     ## Reviever Utilities ##
 
     def storeRequest(self, req):
+        new_request = dict([
+            ('p_user', req['phone']),
+            ('p_vendor', -1),
+            ('message', req['message']),
+            ('accepted', False)])
         # Puts data into store
-        print("Request %s stored" % req)
+        self.requests.append(new_request)
+        print("Request %s stored" % req['message'])
 
     def requestReply(self, vendor_number, accept):
         # Get vendor orders where accepted = false
