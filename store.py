@@ -1,5 +1,25 @@
 class Store:
 
+    def __init__(self):
+        self.requests = [
+        {'p_user': '9378421922', 
+         'p_vendor': '8004849999',
+         'message': 'give me the meats', 
+         'accepted': 'False'},
+        {'p_user': '9378421922', 
+         'p_vendor': '8004849999',
+         'message': 'I have big grass help me', 
+         'accepted': 'True'},
+        {'p_user': '9378421922', 
+         'p_vendor': '8004849999',
+         'message': 'Yeet a hampster for me', 
+         'accepted': 'False'},
+        {'p_user': '9378421922', 
+         'p_vendor': '8004849999',
+         'message': 'I need grocieriez run pop tarts are out', 
+         'accepted': 'true'}
+        ]
+
     ## Reviever Utilities ##
 
     def storeRequest(self, req):
