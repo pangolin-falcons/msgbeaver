@@ -1,22 +1,38 @@
 from flask import Flask, request
-from flask_restful import Resource, Api
+import requests
+import json
 
 app = Flask(__name__)
-api = Api(app)
 
-@app.route('/')
+def msg_process(msg, tstamp):
+    js = json.loads(msg)
+    messageBlob = {
+        'timestamp': tstamp,
+        'phoneNum': js['originationNumber'],
+        'messageBody': js['messageBody']
+    }
 
-def hello_world():
-    return 'Hello, World!'
+@app.route('/', methods = ['GET', 'POST', 'PUT'])
+def sns():
+    try:
+        js = json.loads(request.data)
+    except:
+        pass
 
-sms = {}
+    print(js)
+    hdr = request.headers.get('X-Amz-Sns-Message-Type')
+    # subscribe to the SNS topic
+    if hdr == 'SubscriptionConfirmation' and 'SubscribeURL' in js:
+        r = requests.get(js['SubscribeURL'])
 
-class ReceiveSMS(Resource):
-    def put(self, newsms_id):
-        sms[newsms_id] = request.form['data']
-        return {newsms_id: sms[newsms_id]}
+    if hdr == 'Notification':
+        msg_process(js['Message'], js['Timestamp'])
 
-api.add_resource(ReceiveSMS, '/<string:newsms_id>')
+    return 'OK\n'
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(
+        host = "0.0.0.0",
+        port = 5000,
+        debug = True
+    )
