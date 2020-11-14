@@ -19,6 +19,16 @@ class Store:
          'message': 'I need grocieriez run pop tarts are out', 
          'accepted': 'true'}
         ]
+        self.users = [
+        {'phone': '9378421922',
+         'name': 'spencer',
+         'type': 'user',
+         'address': '4203 Falcon Rd\n Pangolin, OH'},
+        {'phone': '8004849999',
+         'name': 'fake vendor',
+         'type': 'vendor',
+         'address': 'Ham Street'},
+        ]
 
     ## Reviever Utilities ##
 
