@@ -4,18 +4,22 @@ class Store:
         self.requests = [
         {'p_user': '9378421922', 
          'p_vendor': '8004849999',
+         'time': '2000-01-01T00:00:00',
          'message': 'give me the meats', 
          'accepted': 'False'},
         {'p_user': '9378421922', 
          'p_vendor': '8004849999',
+         'time': '2000-01-01T00:00:00',
          'message': 'I have big grass help me', 
          'accepted': 'True'},
         {'p_user': '9378421922', 
          'p_vendor': '8004849999',
+         'time': '2000-01-01T00:00:00',
          'message': 'Yeet a hampster for me', 
          'accepted': 'False'},
         {'p_user': '9378421922', 
          'p_vendor': '8004849999',
+         'time': '2000-01-01T00:00:00',
          'message': 'I need grocieriez run pop tarts are out', 
          'accepted': 'true'}
         ]
@@ -36,6 +40,7 @@ class Store:
         new_request = dict([
             ('p_user', req['phone']),
             ('p_vendor', -1),
+            ('time', req['Timestamp']),
             ('message', req['message']),
             ('accepted', False)])
         # Puts data into store
