@@ -56,7 +56,7 @@ class Store:
         print("Purging registered request data")
         return
 
-    def isVendor(self, number):
+    def getVendor(self, number):
         # returns the primary key of a vendor if given number is a vendor number
         conn = sql.connect(self.db_name)
         cursor = conn.cursor()

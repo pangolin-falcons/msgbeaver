@@ -7,7 +7,7 @@ class Dispatcher:
         print('dispatcher init')
         store = Store()
         print('store for d made')
-        v_id, vendor_name = store.isVendor(number)
+        v_id, vendor_name = store.getVendor(number)
         print('isvendor running')
         if v_id:
             print('issa vendor')
