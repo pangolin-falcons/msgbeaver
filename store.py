@@ -36,16 +36,16 @@ class Store:
 
     ## Reviever Utilities ##
 
-    def storeRequest(self, req):
+    def storeRequest(self, phoneNum, messageBody, timestamp):
         new_request = dict([
-            ('p_user', req['phone']),
+            ('p_user', phoneNum),
             ('p_vendor', -1),
-            ('time', req['Timestamp']),
-            ('message', req['message']),
+            ('time', timestamp),
+            ('message', messageBody),
             ('accepted', False)])
         # Puts data into store
         self.requests.append(new_request)
-        print("Request %s stored" % req['message'])
+        print("Request %s stored" % messageBody)
 
     def requestReply(self, vendor_number, accept):
         # Get vendor orders where accepted = false

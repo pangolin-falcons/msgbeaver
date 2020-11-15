@@ -1,4 +1,5 @@
 from flask import Flask, request
+from store import Store
 import requests
 import json
 
@@ -6,11 +7,9 @@ app = Flask(__name__)
 
 def msg_process(msg, tstamp):
     js = json.loads(msg)
-    messageBlob = {
-        'timestamp': tstamp,
-        'phoneNum': js['originationNumber'],
-        'messageBody': js['messageBody']
-    }
+    storeData = Store()
+    storeData.storeRequest(js['originationNumber'], js['messageBody'], tstamp)
+
 
 @app.route('/', methods = ['GET', 'POST', 'PUT'])
 def sns():
