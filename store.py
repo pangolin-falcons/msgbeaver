@@ -77,6 +77,17 @@ class Store:
             ''', (v_id,))
         return cursor.fetchone()
 
+    def getOrderInfo(self, o_id):
+        conn = sql.connect(self.db_name)
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT Vendors.name, Vendors.phoneNumber, Customers.name, Customers.phoneNumber FROM Orders, Vendors, Customers
+            WHERE o_id = ? AND
+            Orders.v_id=Vendors.v_id AND
+            Orders.c_id=Customers.c_id;
+            ''', (o_id,))
+        return cursor.fetchone()
+
     def grabAvailableVendor(self, message):
         # Attempts to assign a vendor to a message
         conn = sql.connect(self.db_name)
