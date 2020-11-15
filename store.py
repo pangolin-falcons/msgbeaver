@@ -23,7 +23,7 @@ class Store:
             # To accept mark the order as accepted2
         conn = sql.connect(self.db_name)
         conn.execute('''
-            UPDATE order o
+            UPDATE Orders o
                 SET o.is_accepted = 1
                 WHERE o.is_accepted = 0 AND
                     o.v_id = (select v_id from Vendors WHERE phoneNumber = ?);
@@ -59,24 +59,42 @@ class Store:
     def isVendor(self, number):
         # returns the primary key of a vendor if given number is a vendor number
         conn = sql.connect(self.db_name)
-        conn.execute('''
-            SELECT v_id FROM Vendors
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT v_id, name FROM Vendors
             WHERE phoneNumber = ?;
-            ''', ([number]))
+            ''', (number,))
+        return cursor.fetchone()
 
-    def grabPending(self, vid):
-        # returns the order that's pending for a given vendor id number
+    def grabPending(self, vendorNumber):
+        # returns the order that's pending for a given vendor phone number
         conn = sql.connect(self.db_name)
-        conn.execute('''
-            SELECT * FROM Orders
-            WHERE v_id = ?;
-            ''', ([vid]))
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT request FROM Orders
+            WHERE phoneNumber = ? AND
+                is_accepted = 0;
+            ''', (vendorNumber,))
+        return cursor.fetchone()
 
     def grabAvailableVendor(self, message):
         # Attempts to assign a vendor to a message
         conn = sql.connect(self.db_name)
-        conn.execute('''
+        cursor = conn.cursor() #fucking broken
+        cursor.execute('''
             SELECT phoneNumber FROM Vendors
-            WHERE keyword = ? AND
-                isLazy = 0;
-            ''', ([message]))
+            WHERE keyword = ?
+            WHERE NOT EXISTS(SELECT is_accepted FROM Orders
+            WHERE orderVendor.is_accepted = 0
+            )
+            ''', (message,))
+        cursor.fetchone()
+
+    def generateOrder(self, vendorNumber, clientNumber):
+        # Appends to the Order table
+        conn = sql.connect(self.db_name)
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT INTO Orders (phoneNumber, request)
+            VALUES (?, ?);
+        ''', ((vendorNumber,), clientNumber))
