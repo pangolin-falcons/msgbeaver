@@ -1,5 +1,4 @@
 import sqlite3 as sql
-from dispatcher import Dispatcher
 
 class Store:
 
@@ -57,3 +56,27 @@ class Store:
         print("Purging registered request data")
         return
 
+    def isVendor(self, number):
+        # returns the primary key of a vendor if given number is a vendor number
+        conn = sql.connect(self.db_name)
+        conn.execute('''
+            SELECT v_id FROM Vendors
+            WHERE phoneNumber = ?;
+            ''', ([number]))
+
+    def grabPending(self, vid):
+        # returns the order that's pending for a given vendor id number
+        conn = sql.connect(self.db_name)
+        conn.execute('''
+            SELECT * FROM Orders
+            WHERE v_id = ?;
+            ''', ([vid]))
+
+    def grabAvailableVendor(self, message):
+        # Attempts to assign a vendor to a message
+        conn = sql.connect(self.db_name)
+        conn.execute('''
+            SELECT phoneNumber FROM Vendors
+            WHERE keyword = ? AND
+                isLazy = 0;
+            ''', ([message]))

@@ -16,7 +16,8 @@ class db_store:
                 v_id integer PRIMARY KEY,
                 name text,
                 phoneNumber text,
-                keyword text
+                keyword text,
+                isLazy integer DEFAULT 0
             ); """
         self.sql_create_orders_table = """ 
             CREATE TABLE IF NOT EXISTS Orders (
