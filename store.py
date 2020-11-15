@@ -77,18 +77,18 @@ class Store:
             ''', (v_id,))
         return cursor.fetchone()
 
-    def grabAvailableVendor(self, message):
+    def grabAvailableVendor(self):
         # Attempts to assign a vendor to a message
         conn = sql.connect(self.db_name)
-        cursor = conn.cursor() #fucking broken
+        cursor = conn.cursor()
         cursor.execute('''
-            SELECT phoneNumber FROM Vendors
-            WHERE keyword = ?
-            WHERE NOT EXISTS(SELECT is_accepted FROM Orders
-            WHERE orderVendor.is_accepted = 0
-            )
-            ''', (message,))
-        cursor.fetchone()
+            SELECT v.phoneNumber FROM Vendors v
+                WHERE NOT EXISTS(SELECT * FROM Orders o
+                    WHERE v.v_id = o.o_id
+                    AND o.is_complete = 0
+            );
+            ''')
+        return cursor.fetchone()
 
     def generateOrder(self, vendorNumber, clientNumber):
         # Appends to the Order table
