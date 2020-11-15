@@ -24,14 +24,11 @@ class Store:
             # To accept mark the order as accepted2
         conn = sql.connect(self.db_name)
         conn.execute('''
-            UPDATE request r
-                SET r.is_accepted = 1
-                WHERE r.is_accepted = 0 AND 
-        ''', ())
-        for r in self.requests:
-            if(r['accepted'] == False and r['p_vendor'] == vendor_phone):
-                r['accepted'] = True
-        print("Reqest to vendor %s accepted" % vendor_phone)
+            UPDATE order o
+                SET o.is_accepted = 1
+                WHERE o.is_accepted = 0 AND
+                    o.v_id = (select v_id from Vendors WHERE phoneNumber = ?)
+        ''', (vendor_phone))
 
     def rejectRequest(self, vendor_number):
         # Remove vendor number from order
@@ -41,6 +38,7 @@ class Store:
         print("Reqest to vendor %s accepted" % vendor_number)
 
     def markCompletedRequest(self, vendor_phone): 
+        return
 
     ## Dispatcher Utilities ##
 
