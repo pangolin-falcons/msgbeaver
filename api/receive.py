@@ -10,7 +10,6 @@ def msg_process(msg, tstamp):
     storeData = Store()
     storeData.storeRequest(js['originationNumber'], js['messageBody'], tstamp)
 
-
 @app.route('/', methods = ['GET', 'POST', 'PUT'])
 def sns():
     try:

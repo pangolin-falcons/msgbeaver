@@ -1,3 +1,4 @@
+from dispatcher import Dispatcher
 class Store:
 
     def __init__(self):
@@ -24,14 +25,18 @@ class Store:
          'accepted': False}
         ]
         self.users = [
-        {'phone': '9378421922',
+        {'phone': '+19378421922',
          'name': 'spencer',
-         'type': 'user',
-         'address': '4203 Falcon Rd\n Pangolin, OH'},
-        {'phone': '8004849999',
+         'type': 'vendor',
+         'address': '4203 Falcon Rd\n Pangolin, OH',
+         'keyword': 'carpenter'
+         },
+        {'phone': '+17176494887',
          'name': 'fake vendor',
          'type': 'vendor',
-         'address': 'Ham Street'},
+         'address': 'Ham Street',
+         'keyword': 'locksmith'
+         },
         ]
 
     ## Reviever Utilities ##
@@ -46,6 +51,9 @@ class Store:
         # Puts data into store
         self.requests.append(new_request)
         print("Request %s stored" % messageBody)
+        dispatch = Dispatcher
+        dispatch.processRequest(phoneNum, messageBody, self.users)
+
 
     def acceptRequest(self, vendor_phone):
         # Get vendor orders where accepted = false
