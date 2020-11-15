@@ -44,7 +44,8 @@ class Dispatcher:
             print('vendor grabbed')
             #store.generateOrder(vendorNumbers[0][3], cPhone) # Todo, Can't into INSERT
             print('order generated')
-            self.processRequestForService(vendorNumbers[0][3], cPhone)
+            print(vendorNumbers)
+            self.processRequestForService(vendorNumbers[0][2], cPhone)
             return
         else:
             print('No takers')
