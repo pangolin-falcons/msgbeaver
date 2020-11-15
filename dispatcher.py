@@ -3,22 +3,22 @@ from store import Store
 
 class Dispatcher:
     
-    def __init__(self, number, message):
+    def __init__(self, cPhone, message):
         print('dispatcher init')
         store = Store()
         print('store for d made')
-        v_id, vendor_name = store.getVendor(number)
+        v_id, vendor_name = store.getVendor(cPhone)
         print('isvendor running')
         if v_id:
             print('issa vendor')
             vendorKeyword = self.isVendorKeyword(message) # Vendor sent the message
             if vendorKeyword:
                 print('vendor keyword here')
-                pendingOrderNumber = store.grabPending(v_id)
-                if pendingOrderNumber:
+                pendingOrderID = store.grabPending(v_id)
+                if pendingOrderID:
                     if vendorKeyword == 'accept':
                         # store.acceptRequest(number) # Todo, this locks up the db
-                        self.processAcceptance(number, pendingOrderNumber, v_id)
+                        self.processAcceptance(store,pendingOrderID)
                         return
                     elif vendorKeyword == 'deny':
                         # recurse?
@@ -49,23 +49,14 @@ class Dispatcher:
         #     return
 
     def isVendorKeyword(self, message):
-        acceptKeywords = [ 'yes', 'Yes', 'YES' ]
-        denyKeywords = [ 'no', 'No', 'NO' ]
+        acceptKeywords = [ 'yes', 'Yes', 'YES', 'accept' ]
+        denyKeywords = [ 'no', 'No', 'NO', 'deny' ]
         if message in acceptKeywords:
             return 'accept'
         elif message in denyKeywords:
             return 'deny'
         else:
             return None
-
-    def claimRequest(self):
-        # requests = store.getPendingRequests()
-        # request = requests[0]
-        # store.removePendingRequest(0)
-        return
-
-    def registerRequest(self, request):
-        print("Registering claimed request")
 
     def processRequestForService(self, vendorNumber, number):
         # This is called when a customer asks for a service
@@ -74,11 +65,13 @@ class Dispatcher:
         status = sms.send(vendorNumber, messageBody)
         print(status)
 
-    def processAcceptance(vendorNumber, number, vendorName):
+    def processAcceptance(self,store,o_id):
         # This is called when a servicer takes a job
+        print(o_id)
+        vName, vPhone, cName, cPhone = store.getOrderInfo(o_id[0])
         sms = SendSMS()
-        messageBody = "Your order has been accepted by " + vendorName + "."
-        status = sms.send(number, messageBody)
+        messageBody = "Your order has been accepted by " + vName + "."
+        status = sms.send(cPhone, messageBody)
         print(status)
 
     def processDenial(vendorNumber, number, vendorName):

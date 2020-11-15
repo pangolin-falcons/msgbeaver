@@ -47,6 +47,3 @@ class SendSMS:
             return ["Failure", e.response['Error']['Message']]
         else:
             return ["Success", response['MessageResponse']['Result'][destinationNumber]['MessageId']]
-
-    def receive(self, phoneNum, message):
-        return
