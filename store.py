@@ -64,7 +64,9 @@ class Store:
             SELECT v_id, name FROM Vendors
             WHERE phoneNumber = ?;
             ''', (number,))
-        return cursor.fetchone()
+        if cursor.rowcount > 0:
+            return cursor.fetchone()
+        return (None, None)
 
     def grabPending(self, v_id):
         # returns the order that's pending for a given vendor phone number
