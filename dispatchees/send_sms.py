@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-class Conversations:
+class SendSMS:
 
     def __init__(self):
         region = "us-east-1"
