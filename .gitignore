@@ -205,3 +205,4 @@ $RECYCLE.BIN/
 
 *.swp
 __pycache__/*
+dataload

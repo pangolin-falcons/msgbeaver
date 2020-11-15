@@ -1,4 +1,5 @@
 import sqlite3 as sql
+import csv
 
 class db_store:
     
@@ -22,7 +23,7 @@ class db_store:
                 o_id integer PRIMARY KEY,
                 v_id integer,
                 c_id integer,
-                name text,
+                request text,
                 is_accepted integer DEFAULT 0,
                 is_complete integer DEFAULT 0,
                 phoneNumber text,
@@ -53,4 +54,16 @@ class db_store:
         c.execute(self.sql_create_vendors_table)
         c.execute(self.sql_create_orders_table)
         c.execute(self.sql_create_messages_table)
-     
+
+    def load_db(self):
+        c = self.conn.cursor()
+        with open('dataload/customers.csv', 'r') as f:
+            data = csv.DictReader(f)
+            dbReady = [(i['name'], i['phoneNumber']) for i in data]
+        c.executemany("INSERT INTO Customers (name, phoneNumber) VALUES (?, ?);", dbReady)
+        self.conn.commit()
+        with open('dataload/vendors.csv', 'r') as f:
+            data = csv.DictReader(f)
+            dbReady = [(i['name'], i['phoneNumber'], i['keyword']) for i in data]
+        c.executemany("INSERT INTO Vendors (name, phoneNumber, keyword) VALUES (?, ?, ?);", dbReady)
+        self.conn.commit()
