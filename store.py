@@ -51,7 +51,7 @@ class Store:
         # Puts data into store
         self.requests.append(new_request)
         print("Request %s stored" % messageBody)
-        dispatch = Dispatcher
+        dispatch = Dispatcher()
         print("passed to dispatch")
         dispatch.processRequest(phoneNum, messageBody, self.users)
 
