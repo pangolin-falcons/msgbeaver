@@ -18,7 +18,7 @@ class Dispatcher:
                 if pendingOrderNumber:
                     if vendorKeyword == 'accept':
                         # store.acceptRequest(number) # Todo, this locks up the db
-                        self.processAcceptance(number, pendingOrder, vid[1]) # vid is a tuple of both v_id and name
+                        self.processAcceptance(number, pendingOrderNumber, vid[1]) # vid is a tuple of both v_id and name
                         return
                     elif vendorKeyword == 'deny':
                         # recurse?
