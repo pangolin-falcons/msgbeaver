@@ -66,15 +66,15 @@ class Store:
             ''', (number,))
         return cursor.fetchone()
 
-    def grabPending(self, vendorNumber):
+    def grabPending(self, v_id):
         # returns the order that's pending for a given vendor phone number
         conn = sql.connect(self.db_name)
         cursor = conn.cursor()
         cursor.execute('''
-            SELECT request FROM Orders
-            WHERE phoneNumber = ? AND
+            SELECT o_id FROM Orders
+            WHERE v_id = ? AND
                 is_accepted = 0;
-            ''', (vendorNumber,))
+            ''', (v_id,))
         return cursor.fetchone()
 
     def grabAvailableVendor(self, message):

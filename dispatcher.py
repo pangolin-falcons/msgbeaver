@@ -7,22 +7,22 @@ class Dispatcher:
         print('dispatcher init')
         store = Store()
         print('store for d made')
-        vid = store.isVendor(number)
+        v_id, vendor_name = store.isVendor(number)
         print('isvendor running')
-        if vid:
+        if v_id:
             print('issa vendor')
             vendorKeyword = self.isVendorKeyword(message) # Vendor sent the message
             if vendorKeyword:
                 print('vendor keyword here')
-                pendingOrderNumber = store.grabPending(number)
+                pendingOrderNumber = store.grabPending(v_id)
                 if pendingOrderNumber:
                     if vendorKeyword == 'accept':
                         # store.acceptRequest(number) # Todo, this locks up the db
-                        self.processAcceptance(number, pendingOrderNumber, vid[1]) # vid is a tuple of both v_id and name
+                        self.processAcceptance(number, pendingOrderNumber, v_id)
                         return
                     elif vendorKeyword == 'deny':
                         # recurse?
-                        # store.rejectRequest(number, pendingOrder[0]['phoneNumber'], vid[1])
+                        # store.rejectRequest(number, pendingOrder[0]['phoneNumber'], v_id)
                         # Todo, we need to decide what exactly to do when the vendor denies a job.
                         return
                     else:
