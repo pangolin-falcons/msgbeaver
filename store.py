@@ -52,7 +52,9 @@ class Store:
         self.requests.append(new_request)
         print("Request %s stored" % messageBody)
         dispatch = Dispatcher
+        print("passed to dispatch")
         dispatch.processRequest(phoneNum, messageBody, self.users)
+
 
 
     def acceptRequest(self, vendor_phone):

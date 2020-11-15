@@ -17,15 +17,15 @@ class Dispatcher:
     def processRequest(self, phoneNum, messageBody, vendors):
         uniqKeywords = list(set(messageBody.split(" ")))
 
-        firstVendor = ""
+        firstVendor = {}
         for keyword in uniqKeywords:
             #TODO: Search database for this
             for vendor in vendors:
                 if vendor['keyword'] == keyword:
                     firstVendor = vendor
-                    break
 
+        print(firstVendor)
         sms = SendSMS()
-        newMessageBody = "Hi " + vendor['name'] + ", new order for service from " + phoneNum + ". Please contact."
-        status = sms.send(vendor['phone'], newMessageBody)
+        newMessageBody = "Hi " + firstVendor['name'] + ", new order for service from " + phoneNum + ". Please contact."
+        status = sms.send(firstVendor['phone'], newMessageBody)
         print(status)
