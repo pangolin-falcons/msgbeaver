@@ -58,15 +58,6 @@ class Dispatcher:
         else:
             return None
 
-    def claimRequest(self):
-        # requests = store.getPendingRequests()
-        # request = requests[0]
-        # store.removePendingRequest(0)
-        return
-
-    def registerRequest(self, request):
-        print("Registering claimed request")
-
     def processRequestForService(self, vendorNumber, number):
         # This is called when a customer asks for a service
         sms = SendSMS()
