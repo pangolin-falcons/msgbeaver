@@ -42,7 +42,7 @@ class Dispatcher:
         # grabAvailableVendor should grab a vendor's phone number from Vendors that doesn't have an un-accepted order in Orders.
         if True: #vendorNumber:
             print('vendor grabbed')
-            store.generateOrder(vendorNumbers[0][3], cPhone) # Todo, Can't into INSERT
+            #store.generateOrder(vendorNumbers[0][3], cPhone) # Todo, Can't into INSERT
             print('order generated')
             self.processRequestForService(vendorNumbers[0][3], cPhone)
             return
