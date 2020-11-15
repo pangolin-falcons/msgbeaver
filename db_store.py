@@ -55,7 +55,6 @@ class db_store:
         c.execute(self.sql_create_vendors_table)
         c.execute(self.sql_create_orders_table)
         c.execute(self.sql_create_messages_table)
-        self.load_db()
 
     def load_db(self):
         c = self.conn.cursor()
