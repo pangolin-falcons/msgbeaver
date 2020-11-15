@@ -88,18 +88,19 @@ class Store:
             ''', (o_id,))
         return cursor.fetchone()
 
-    def grabAvailableVendor(self):
-        # Attempts to assign a vendor to a message
+    def getVendorsFromKeywords(self, keywords):
         conn = sql.connect(self.db_name)
         cursor = conn.cursor()
-        cursor.execute('''
-            SELECT v.phoneNumber FROM Vendors v
-                WHERE NOT EXISTS(SELECT * FROM Orders o
-                    WHERE v.v_id = o.o_id
-                    AND o.is_complete = 0
-            );
-            ''')
-        return cursor.fetchone()
+        vendorKeywords = ['carpenter','handyman','plumber']
+
+        for key in keywords:
+            if key is vendorKeywords:
+                cursor.execute('''
+                    SELECT v_id FROM Vendors
+                        WHERE keyword = ?
+                    );
+            ''', (key,))
+        return cursor.fetchall()
 
     def generateOrder(self, vendorNumber, clientNumber):
         # Appends to the Order table

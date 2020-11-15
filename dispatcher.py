@@ -36,17 +36,19 @@ class Dispatcher:
 
         # Customer sent the message
         print('customer')
-        #vendorNumber = store.grabAvailableVendor(message) # Todo, this doesn't grab correctly.
+
+        uniqKeywords = list(set(message.split(" ")))
+        vendorNumber = store.getVendorsFromKeywords(uniqKeywords) # Todo, this doesn't grab correctly.
         # grabAvailableVendor should grab a vendor's phone number from Vendors that doesn't have an un-accepted order in Orders.
-        # if True: #vendorNumber:
-        #     print('vendor grabbed')
-        #     store.generateOrder(vendorNumber[0], number) # Todo, Can't into INSERT
-        #     print('order generated')
-        #     self.processRequestForService(vendorNumber[0], number)
-        #     return
-        # else:
-        #     print('No takers')
-        #     return
+        if True: #vendorNumber:
+            print('vendor grabbed')
+            store.generateOrder(vendorNumber[0], number) # Todo, Can't into INSERT
+            print('order generated')
+            self.processRequestForService(vendorNumber[0], number)
+            return
+        else:
+            print('No takers')
+            return
 
     def isVendorKeyword(self, message):
         acceptKeywords = [ 'yes', 'Yes', 'YES', 'accept' ]
