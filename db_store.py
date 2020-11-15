@@ -44,8 +44,8 @@ class db_store:
         self.init_database()
 
     def __del__(self):
-        conn.commit()
-        conn.close()
+        self.conn.commit()
+        self.conn.close()
 
     def init_database(self):
         c = self.conn.cursor()
