@@ -16,7 +16,8 @@ class db_store:
                 v_id integer PRIMARY KEY,
                 name text,
                 phoneNumber text,
-                keyword text
+                keyword text,
+                isLazy integer DEFAULT 0
             ); """
         self.sql_create_orders_table = """ 
             CREATE TABLE IF NOT EXISTS Orders (
@@ -59,11 +60,18 @@ class db_store:
         c = self.conn.cursor()
         with open('dataload/customers.csv', 'r') as f:
             data = csv.DictReader(f)
-            dbReady = [(i['name'], i['phoneNumber']) for i in data]
-        c.executemany("INSERT INTO Customers (name, phoneNumber) VALUES (?, ?);", dbReady)
+            dbReady = [(i['c_id'], i['name'], i['phoneNumber']) for i in data]
+        c.executemany("INSERT INTO Customers (c_id, name, phoneNumber) VALUES (?, ?, ?);", dbReady)
         self.conn.commit()
         with open('dataload/vendors.csv', 'r') as f:
             data = csv.DictReader(f)
-            dbReady = [(i['name'], i['phoneNumber'], i['keyword']) for i in data]
-        c.executemany("INSERT INTO Vendors (name, phoneNumber, keyword) VALUES (?, ?, ?);", dbReady)
+            dbReady = [(i['v_id'], i['name'], i['phoneNumber'], i['keyword']) for i in data]
+        c.executemany("INSERT INTO Vendors (v_id, name, phoneNumber, keyword) VALUES (?, ?, ?, ?);", dbReady)
         self.conn.commit()
+        c = self.conn.cursor()
+        with open('dataload/orders.csv', 'r') as f:
+            data = csv.DictReader(f)
+            dbReady = [(i['o_id'], i['v_id'], i['c_id'], i['request'], 
+                       i['is_accepted'], i['is_complete']) for i in data]
+        c.executemany("""INSERT INTO Orders (o_id, v_id, c_id, request, is_accepted, is_complete) 
+                           VALUES (?, ?, ?, ?, ?, ?);""", dbReady)

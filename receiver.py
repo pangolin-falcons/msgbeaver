@@ -1,5 +1,6 @@
 from flask import Flask, request
 from store import Store
+from dispatcher import Dispatcher
 import requests
 import json
 
@@ -8,8 +9,10 @@ app = Flask(__name__)
 def msg_process(msg, tstamp):
     js = json.loads(msg)
     storeData = Store()
-    storeData.storeRequest(js['originationNumber'], js['messageBody'], tstamp)
+    storeData.storeRequest(js['originationNumber'], js['messageBody'])
     print("Passed to store")
+    d = Dispatcher(js['originationNumber'], js['messageBody'])
+    print("Dispatcher Generated")
 
 @app.route('/', methods = ['GET', 'POST', 'PUT'])
 def sns():

@@ -1,69 +1,33 @@
-from dispatcher import Dispatcher
+import sqlite3 as sql
+
 class Store:
 
     def __init__(self):
-        self.requests = [
-        {'p_user': '9378421922', 
-         'p_vendor': None,
-         'time': '2000-01-01T00:00:00',
-         'message': 'give me the meats', 
-         'accepted': False},
-        {'p_user': '9378421922', 
-         'p_vendor': '8004849999',
-         'time': '2000-01-01T00:00:00',
-         'message': 'I have big grass help me', 
-         'accepted': 'True'},
-        {'p_user': '9378421922', 
-         'p_vendor': '8004849999',
-         'time': '2000-01-01T00:00:00',
-         'message': 'Yeet a hampster for me', 
-         'accepted': False},
-        {'p_user': '9378421922', 
-         'p_vendor': None,
-         'time': '2000-01-01T00:00:00',
-         'message': 'I need grocieriez run pop tarts are out', 
-         'accepted': False}
-        ]
-        self.users = [
-        {'phone': '+19378421922',
-         'name': 'spencer',
-         'type': 'vendor',
-         'address': '4203 Falcon Rd\n Pangolin, OH',
-         'keyword': 'carpenter'
-         },
-        {'phone': '+17176494887',
-         'name': 'fake vendor',
-         'type': 'vendor',
-         'address': 'Ham Street',
-         'keyword': 'locksmith'
-         },
-        ]
+        self.db_name = "data.sqlite"
 
     ## Reviever Utilities ##
 
-    def storeRequest(self, phoneNum, messageBody, timestamp):
-        new_request = dict([
-            ('p_user', phoneNum),
-            ('p_vendor', -1),
-            ('time', timestamp),
-            ('message', messageBody),
-            ('accepted', False)])
-        # Puts data into store
-        self.requests.append(new_request)
-        print("Request %s stored" % messageBody)
-        dispatch = Dispatcher()
-        print("passed to dispatch")
-        dispatch.processRequest(phoneNum, messageBody, self.users)
-
-
+    def storeRequest(self, phoneNum, messageBody):
+        conn = sql.connect(self.db_name)
+        conn.execute('''
+            INSERT INTO Orders (c_id, request)
+                VALUES (
+                    (SELECT c.c_id FROM Customers c WHERE c.phoneNumber = ?), 
+                    ?
+                );''', (phoneNum, messageBody))
+        conn.commit()
+        conn.close()
 
     def acceptRequest(self, vendor_phone):
         # Get vendor orders where accepted = false
             # To accept mark the order as accepted2
-        for r in self.requests:
-            if(r['accepted'] == False and r['p_vendor'] == vendor_phone):
-                r['accepted'] = True
-        print("Reqest to vendor %s accepted" % vendor_phone)
+        conn = sql.connect(self.db_name)
+        conn.execute('''
+            UPDATE Orders o
+                SET o.is_accepted = 1
+                WHERE o.is_accepted = 0 AND
+                    o.v_id = (select v_id from Vendors WHERE phoneNumber = ?);
+        ''', (vendor_phone))
 
     def rejectRequest(self, vendor_number):
         # Remove vendor number from order
@@ -71,6 +35,9 @@ class Store:
             if(r['accepted'] == False and r['p_vendor'] == vendor_phone):
                 r['p_vendor'] = None
         print("Reqest to vendor %s accepted" % vendor_number)
+
+    def markCompletedRequest(self, vendor_phone): 
+        return
 
     ## Dispatcher Utilities ##
 
@@ -88,3 +55,46 @@ class Store:
         # Removes request data at index
         print("Purging registered request data")
         return
+
+    def getVendor(self, number):
+        # returns the primary key of a vendor if given number is a vendor number
+        conn = sql.connect(self.db_name)
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT v_id, name FROM Vendors
+            WHERE phoneNumber = ?;
+            ''', (number,))
+        return cursor.fetchone()
+
+    def grabPending(self, v_id):
+        # returns the order that's pending for a given vendor phone number
+        conn = sql.connect(self.db_name)
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT o_id FROM Orders
+            WHERE v_id = ? AND
+                is_accepted = 0;
+            ''', (v_id,))
+        return cursor.fetchone()
+
+    def grabAvailableVendor(self, message):
+        # Attempts to assign a vendor to a message
+        conn = sql.connect(self.db_name)
+        cursor = conn.cursor() #fucking broken
+        cursor.execute('''
+            SELECT phoneNumber FROM Vendors
+            WHERE keyword = ?
+            WHERE NOT EXISTS(SELECT is_accepted FROM Orders
+            WHERE orderVendor.is_accepted = 0
+            )
+            ''', (message,))
+        cursor.fetchone()
+
+    def generateOrder(self, vendorNumber, clientNumber):
+        # Appends to the Order table
+        conn = sql.connect(self.db_name)
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT INTO Orders (phoneNumber, request)
+            VALUES (?, ?);
+        ''', ((vendorNumber,), clientNumber))
