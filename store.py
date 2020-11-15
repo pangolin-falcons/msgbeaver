@@ -96,13 +96,12 @@ class Store:
         vendorKeywords = ['carpenter','handyman','plumber']
 
         for key in keywords:
-            if key is vendorKeywords:
+            if key in vendorKeywords:
                 cursor.execute('''
-                    SELECT v_id FROM Vendors
-                        WHERE keyword = ?
-                    );
+                    SELECT * FROM Vendors
+                        WHERE keyword = ?;
             ''', (key,))
-        return cursor.fetchall()
+            return cursor.fetchall()
 
     def generateOrder(self, vendorNumber, clientNumber):
         # Appends to the Order table
