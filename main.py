@@ -1,5 +1,5 @@
-from conversations import Conversations
+from dispatchees.send_sms import SendSMS
+from store import Store
 
-conv = Conversations()
-status = conv.send("+17404173920","Hello Ian!")
-print(status)
+store = Store()
+store.storeRequest('+17176209596', 'carpenter please', '123')

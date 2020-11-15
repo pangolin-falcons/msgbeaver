@@ -9,23 +9,23 @@ def msg_process(msg, tstamp):
     js = json.loads(msg)
     storeData = Store()
     storeData.storeRequest(js['originationNumber'], js['messageBody'], tstamp)
-
+    print("Passed to store")
 
 @app.route('/', methods = ['GET', 'POST', 'PUT'])
 def sns():
     try:
         js = json.loads(request.data)
+
+        hdr = request.headers.get('X-Amz-Sns-Message-Type')
+        # subscribe to the SNS topic
+        if hdr == 'SubscriptionConfirmation' and 'SubscribeURL' in js:
+            r = requests.get(js['SubscribeURL'])
+
+        if hdr == 'Notification':
+            msg_process(js['Message'], js['Timestamp'])
+
     except:
         pass
-
-    print(js)
-    hdr = request.headers.get('X-Amz-Sns-Message-Type')
-    # subscribe to the SNS topic
-    if hdr == 'SubscriptionConfirmation' and 'SubscribeURL' in js:
-        r = requests.get(js['SubscribeURL'])
-
-    if hdr == 'Notification':
-        msg_process(js['Message'], js['Timestamp'])
 
     return 'OK\n'
 
